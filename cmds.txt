@@ -1,0 +1,14 @@
+echo "# ibm-serverless" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/KvadratAB/ibm-serverless.git
+git push -u origin master
+                
+
+ibmcloud resource service-instance-create todobackend cloudantnosqldb lite eu-de -p '{"legacyCredentials" : false }'
+
+
+curl -u cd2612f3-742c-400e-9bfb-bde7fd9e0a1b-bluemix:ce12a4fabaedabc2eb613d1b1869d98bb1433649f115ed4e08f481a5fa3c3fae https://cd2612f3-742c-400e-9bfb-bde7fd9e0a1b-bluemix:ce12a4fabaedabc2eb613d1b1869d98bb1433649f115ed4e08f481a5fa3c3fae@cd2612f3-742c-400e-9bfb-bde7fd9e0a1b-bluemix.cloudantnosqldb.appdomain.cloud/_all_dbs
+
+curl -u cd2612f3-742c-400e-9bfb-bde7fd9e0a1b-bluemix -X PUT "https://cd2612f3-742c-400e-9bfb-bde7fd9e0a1b-bluemix:ce12a4fabaedabc2eb613d1b1869d98bb1433649f115ed4e08f481a5fa3c3fae@cd2612f3-742c-400e-9bfb-bde7fd9e0a1b-bluemix.cloudantnosqldb.appdomain.cloud/todo-jp?partioned=false"
