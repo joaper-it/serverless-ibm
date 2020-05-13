@@ -1,0 +1,63 @@
+packages:
+  todo-backend:
+    version: 0.1
+    name: todo-backend
+    namespace: Kvadrat
+    dependencies:
+      openwhisk-cloudant:
+        location: /whisk.system/cloudant
+        inputs:
+          host: cd2612f3-742c-400e-9bfb-bde7fd9e0a1b-bluemix.cloudantnosqldb.appdomain.cloud
+          password: ce12a4fabaedabc2eb613d1b1869d98bb1433649f115ed4e08f481a5fa3c3fae
+          username: cd2612f3-742c-400e-9bfb-bde7fd9e0a1b-bluemix
+          dbname: todos
+    actions:
+      prepare-get-todos:
+        function: ./actions/prepare-get-todos.js
+      format-todos:
+        function: ./actions/format-todos.js
+      prepare-create-todo:
+        function: ./actions/prepare-create-todo.js
+      prepare-get-todo:
+        function: ./actions/prepare-get-todo.js
+      format-todo:
+        function: ./actions/format-todo.js
+      format-reset:
+        function: ./actions/format-reset.js
+    sequences:
+      get-todos:
+        actions: prepare-get-todos, openwhisk-cloudant/list-documents, format-todos
+      create-todo:
+        actions: prepare-create-todo, openwhisk-cloudant/create-document, prepare-get-todo, openwhisk-cloudant/read-document, format-todo
+      reset-todos:
+        actions: destroy-todos, init-todos, format-reset
+      init-todos:
+        actions: openwhisk-cloudant/create-database
+      destroy-todos:
+        actions: openwhisk-cloudant/delete-database
+      get-todo:
+        actions: prepare-get-todo, openwhisk-cloudant/read-document, format-todo
+    apis:
+      todos:
+        /todos:
+          /:
+            get-todos:
+              method: get
+              response: http
+            create-todo:
+              method: post
+              response: http
+            reset-todos:
+              method: delete
+              response: http
+          /setup:
+            init-todos:
+              method: post
+              response: json
+            destroy-todos:
+              method: delete
+              response: json
+          /entry:
+            get-todo:
+              method: get
+              response: http
